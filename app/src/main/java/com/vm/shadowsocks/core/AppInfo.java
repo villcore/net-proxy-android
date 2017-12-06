@@ -2,6 +2,9 @@ package com.vm.shadowsocks.core;
 
 import android.graphics.drawable.Drawable;
 
+/**
+ * App 信息
+ */
 public class AppInfo {
     private Drawable appIcon;
     private String appLabel;
