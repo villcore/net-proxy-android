@@ -11,9 +11,14 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
+/**
+ * NIO ServerSocket
+ */
 public class TcpProxyServer implements Runnable {
 
-    public boolean Stopped;
+    //是否停止
+    public boolean stopped;
+    //端口
     public short Port;
 
     Selector m_Selector;
@@ -38,7 +43,7 @@ public class TcpProxyServer implements Runnable {
     }
 
     public void stop() {
-        this.Stopped = true;
+        this.stopped = true;
         if (m_Selector != null) {
             try {
                 m_Selector.close();
@@ -108,12 +113,14 @@ public class TcpProxyServer implements Runnable {
         return null;
     }
 
-    void onAccepted(SelectionKey key) {
+    private void onAccepted(SelectionKey key) {
         Tunnel localTunnel = null;
         try {
+            //local
             SocketChannel localChannel = m_ServerSocketChannel.accept();
             localTunnel = TunnelFactory.wrap(localChannel, m_Selector);
 
+            //create remote
             InetSocketAddress destAddress = getDestAddress(localChannel);
             if (destAddress != null) {
                 Tunnel remoteTunnel = TunnelFactory.createTunnelByConfig(destAddress, m_Selector);

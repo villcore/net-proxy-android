@@ -248,7 +248,7 @@ public class LocalVpnService extends VpnService implements Runnable {
         int size = 0;
         while (size != -1 && IsRunning) {
             while ((size = in.read(m_Packet)) > 0 && IsRunning) {
-                if (m_DnsProxy.Stopped || m_TcpProxyServer.Stopped) {
+                if (m_DnsProxy.Stopped || m_TcpProxyServer.stopped) {
                     in.close();
                     throw new Exception("LocalServer stopped.");
                 }
