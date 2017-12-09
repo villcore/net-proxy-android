@@ -30,7 +30,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 核心实现代理的底层机制
+ */
 public class LocalVpnService extends VpnService implements Runnable {
+
 
     public static LocalVpnService Instance;
     public static String ProxyUrl;
@@ -164,10 +168,10 @@ public class LocalVpnService extends VpnService implements Runnable {
 
             ProxyConfig.AppInstallID = getAppInstallID();//获取安装ID
             ProxyConfig.AppVersion = getVersionName();//获取版本号
+
             System.out.printf("AppInstallID: %s\n", ProxyConfig.AppInstallID);
             writeLog("Android version: %s", Build.VERSION.RELEASE);
             writeLog("App version: %s", ProxyConfig.AppVersion);
-
 
             ChinaIpMaskManager.loadFromFile(getResources().openRawResource(R.raw.ipmask));//加载中国的IP段，用于IP分流。
             waitUntilPreapred();//检查是否准备完毕。
@@ -211,6 +215,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                         onStatusChanged(errString, false);
                         continue;
                     }
+
                     String welcomeInfoString = ProxyConfig.Instance.getWelcomeInfo();
                     if (welcomeInfoString != null && !welcomeInfoString.isEmpty()) {
                         writeLog("%s", ProxyConfig.Instance.getWelcomeInfo());
@@ -235,8 +240,11 @@ public class LocalVpnService extends VpnService implements Runnable {
 
     private void runVPN() throws Exception {
         this.m_VPNInterface = establishVPN();
+
         this.m_VPNOutputStream = new FileOutputStream(m_VPNInterface.getFileDescriptor());
         FileInputStream in = new FileInputStream(m_VPNInterface.getFileDescriptor());
+
+        //流转发, 循坏转发
         int size = 0;
         while (size != -1 && IsRunning) {
             while ((size = in.read(m_Packet)) > 0 && IsRunning) {
@@ -248,11 +256,12 @@ public class LocalVpnService extends VpnService implements Runnable {
             }
             Thread.sleep(20);
         }
+
         in.close();
         disconnectVPN();
     }
 
-    void onIPPacketReceived(IPHeader ipHeader, int size) throws IOException {
+    private void onIPPacketReceived(IPHeader ipHeader, int size) throws IOException {
         switch (ipHeader.getProtocol()) {
             case IPHeader.TCP:
                 TCPHeader tcpHeader = m_TCPHeader;

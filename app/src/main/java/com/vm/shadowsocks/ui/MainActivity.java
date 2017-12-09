@@ -36,6 +36,7 @@ import com.vm.shadowsocks.core.ProxyConfig;
 
 import java.util.Calendar;
 
+
 public class MainActivity extends Activity implements
         View.OnClickListener,
         OnCheckedChangeListener,
@@ -62,11 +63,14 @@ public class MainActivity extends Activity implements
 
         scrollViewLog = (ScrollView) findViewById(R.id.scrollViewLog);
         textViewLog = (TextView) findViewById(R.id.textViewLog);
+
+        //proxy url view ...
         findViewById(R.id.ProxyUrlLayout).setOnClickListener(this);
         findViewById(R.id.AppSelectLayout).setOnClickListener(this);
 
         textViewProxyUrl = (TextView) findViewById(R.id.textViewProxyUrl);
         String ProxyUrl = readProxyUrl();
+
         if (TextUtils.isEmpty(ProxyUrl)) {
             textViewProxyUrl.setText(R.string.config_not_set_value);
         } else {
@@ -89,12 +93,12 @@ public class MainActivity extends Activity implements
         }
     }
 
-    String readProxyUrl() {
+    private String readProxyUrl() {
         SharedPreferences preferences = getSharedPreferences("shadowsocksProxyUrl", MODE_PRIVATE);
         return preferences.getString(CONFIG_URL_KEY, "");
     }
 
-    void setProxyUrl(String ProxyUrl) {
+    private void setProxyUrl(String ProxyUrl) {
         SharedPreferences preferences = getSharedPreferences("shadowsocksProxyUrl", MODE_PRIVATE);
         Editor editor = preferences.edit();
         editor.putString(CONFIG_URL_KEY, ProxyUrl);
@@ -142,11 +146,12 @@ public class MainActivity extends Activity implements
             return;
         }
 
+        //配置地址
         if (v.getTag().toString().equals("ProxyUrl")){
             new AlertDialog.Builder(this)
                     .setTitle(R.string.config_url)
-                    .setItems(new CharSequence[]{
-                            getString(R.string.config_url_scan),
+                    .setItems(new CharSequence[]{getString(
+                            R.string.config_url_scan),
                             getString(R.string.config_url_manual)
                     }, new OnClickListener() {
                         @Override
@@ -162,8 +167,10 @@ public class MainActivity extends Activity implements
                         }
                     })
                     .show();
-        } else if (v.getTag().toString().equals("AppSelect")){
-            System.out.println("abc");
+        }
+
+        //代理软件选择
+        if (v.getTag().toString().equals("AppSelect")){
             startActivity(new Intent(this, AppManager.class));
         }
     }
@@ -174,12 +181,19 @@ public class MainActivity extends Activity implements
                 .initiateScan(IntentIntegrator.QR_CODE_TYPES);
     }
 
+    /**
+     * 配置地址对话框
+     */
     private void showProxyUrlInputDialog() {
         final EditText editText = new EditText(this);
+
         editText.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+        //ss://method:password@host:port
         editText.setHint(getString(R.string.config_url_hint));
+        //载入已经填写好的url信息
         editText.setText(readProxyUrl());
 
+        //
         new AlertDialog.Builder(this)
                 .setTitle(R.string.config_url)
                 .setView(editText)
@@ -235,6 +249,7 @@ public class MainActivity extends Activity implements
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (LocalVpnService.IsRunning != isChecked) {
             switchProxy.setEnabled(false);
+
             if (isChecked) {
                 Intent intent = LocalVpnService.prepare(this);
                 if (intent == null) {

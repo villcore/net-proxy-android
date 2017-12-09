@@ -3,7 +3,7 @@ package com.vm.shadowsocks.core;
 import android.graphics.drawable.Drawable;
 
 /**
- * App 信息
+ * App 信息,ss
  */
 public class AppInfo {
     private Drawable appIcon;
