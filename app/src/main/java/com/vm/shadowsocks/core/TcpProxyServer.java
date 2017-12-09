@@ -26,6 +26,7 @@ public class TcpProxyServer implements Runnable {
         m_ServerSocketChannel.configureBlocking(false);
         m_ServerSocketChannel.socket().bind(new InetSocketAddress(port));
         m_ServerSocketChannel.register(m_Selector, SelectionKey.OP_ACCEPT);
+
         this.Port = (short) m_ServerSocketChannel.socket().getLocalPort();
         System.out.printf("AsyncTcpServer listen on %d success.\n", this.Port & 0xFFFF);
     }
@@ -94,6 +95,7 @@ public class TcpProxyServer implements Runnable {
     InetSocketAddress getDestAddress(SocketChannel localChannel) {
         short portKey = (short) localChannel.socket().getPort();
         NatSession session = NatSessionManager.getSession(portKey);
+
         if (session != null) {
             if (ProxyConfig.Instance.needProxy(session.RemoteHost, session.RemoteIP)) {
                 if (ProxyConfig.IS_DEBUG)

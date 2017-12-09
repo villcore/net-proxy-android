@@ -263,9 +263,11 @@ public class LocalVpnService extends VpnService implements Runnable {
 
     private void onIPPacketReceived(IPHeader ipHeader, int size) throws IOException {
         switch (ipHeader.getProtocol()) {
-            case IPHeader.TCP:
+            case IPHeader.TCP: {
                 TCPHeader tcpHeader = m_TCPHeader;
                 tcpHeader.m_Offset = ipHeader.getHeaderLength();
+
+                //本地IP, 127.0.0.1, localhost
                 if (ipHeader.getSourceIP() == LOCAL_IP) {
                     if (tcpHeader.getSourcePort() == m_TcpProxyServer.Port) {// 收到本地TCP服务器数据
                         NatSession session = NatSessionManager.getSession(tcpHeader.getDestinationPort());
@@ -285,7 +287,9 @@ public class LocalVpnService extends VpnService implements Runnable {
                         // 添加端口映射
                         int portKey = tcpHeader.getSourcePort();
                         NatSession session = NatSessionManager.getSession(portKey);
-                        if (session == null || session.RemoteIP != ipHeader.getDestinationIP() || session.RemotePort != tcpHeader.getDestinationPort()) {
+                        if (session == null
+                                || session.RemoteIP != ipHeader.getDestinationIP()
+                                || session.RemotePort != tcpHeader.getDestinationPort()) {
                             session = NatSessionManager.createSession(portKey, ipHeader.getDestinationIP(), tcpHeader.getDestinationPort());
                         }
 
@@ -320,7 +324,8 @@ public class LocalVpnService extends VpnService implements Runnable {
                     }
                 }
                 break;
-            case IPHeader.UDP:
+            }
+            case IPHeader.UDP: {
                 // 转发DNS数据包：
                 UDPHeader udpHeader = m_UDPHeader;
                 udpHeader.m_Offset = ipHeader.getHeaderLength();
@@ -333,6 +338,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                     }
                 }
                 break;
+            }
         }
     }
 
