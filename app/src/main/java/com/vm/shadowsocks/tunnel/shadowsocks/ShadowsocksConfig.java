@@ -14,6 +14,7 @@ public class ShadowsocksConfig extends Config {
     public static ShadowsocksConfig parse(String proxyInfo) throws Exception {
         ShadowsocksConfig config = new ShadowsocksConfig();
         Uri uri = Uri.parse(proxyInfo);
+
         if (uri.getPort() == -1) {
             String base64String = uri.getHost();
             proxyInfo = "ss://" + new String(Base64.decode(base64String.getBytes("ASCII"), Base64.DEFAULT));

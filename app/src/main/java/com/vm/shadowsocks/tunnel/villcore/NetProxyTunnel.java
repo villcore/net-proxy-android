@@ -8,6 +8,8 @@ import com.vm.shadowsocks.tunnel.shadowsocks.ShadowsocksConfig;
 import java.nio.ByteBuffer;
 import java.nio.channels.Selector;
 
+import static com.vm.shadowsocks.tunnel.shadowsocks.AesCrypt.CIPHER_AES_128_CFB;
+
 /**
  * Created by villcore on 2017/12/9.
  */
@@ -15,13 +17,13 @@ import java.nio.channels.Selector;
 public class NetProxyTunnel extends Tunnel {
 
     private ICrypt m_Encryptor;
-    private ShadowsocksConfig m_Config;
+    private NetProxyConfig m_Config;
     private boolean m_TunnelEstablished;
 
-    public NetProxyTunnel(ShadowsocksConfig config, Selector selector) throws Exception {
+    public NetProxyTunnel(NetProxyConfig config, Selector selector) throws Exception {
         super(config.ServerAddress, selector);
         m_Config = config;
-        m_Encryptor = CryptFactory.get(m_Config.EncryptMethod, m_Config.Password);
+        m_Encryptor = CryptFactory.get(CIPHER_AES_128_CFB, m_Config.password);
 
     }
 
@@ -33,10 +35,13 @@ public class NetProxyTunnel extends Tunnel {
 
         buffer.put((byte) 0x03);//domain
         byte[] domainBytes = m_DestAddress.getHostName().getBytes();
+
         buffer.put((byte) domainBytes.length);//domain length;
+
         buffer.put(domainBytes);
         buffer.putShort((short) m_DestAddress.getPort());
         buffer.flip();
+
         byte[] _header = new byte[buffer.limit()];
         buffer.get(_header);
 
