@@ -49,6 +49,9 @@ public class PackageToBytesTask implements Runnable {
                     pkg = entry.getValue().handle(pkg);
                 }
                 pkg.writePackageWithoutHeader(outputStream);
+                System.out.println(">>>>>>>>>>>>>>" + pkg.getBody().length);
+
+                System.out.println("package to bytes  = " + new String(pkg.getBody()));
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
                 stop();

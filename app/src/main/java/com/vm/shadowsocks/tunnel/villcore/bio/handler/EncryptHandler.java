@@ -22,8 +22,11 @@ public class EncryptHandler implements Handler {
     @Override
     public Package handle(Package pkg) throws Exception {
         byte[] bytes = pkg.getBody();
+        System.out.println("before encrypt = " + new String(bytes));
 
         if(!ivSend) {
+            System.out.println("iv not send ...");
+
             byte[] iv = crypt.getIv();
             byte[] encryptHeader;
             byte[] encryptBody = crypt.encrypt(bytes);
@@ -38,6 +41,7 @@ public class EncryptHandler implements Handler {
             ivSend = true;
             return newPkg;
         } else {
+            System.out.println("iv send ...");
             byte[] encryptHeader = new byte[0];
             byte[] encryptBody = crypt.encrypt(bytes);
 

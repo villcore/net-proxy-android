@@ -1,5 +1,7 @@
 package com.vm.shadowsocks.tunnel.villcore.bio.util;
 
+import com.vm.shadowsocks.core.LocalVpnService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +12,7 @@ import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.channels.SocketChannel;
 
 /**
  * Created by villcre on 2017/7/17.
@@ -22,6 +25,22 @@ public class SocketUtil {
     public static Socket connect(InetSocketAddress address) {
         try {
             Socket socket = new Socket();
+            socket.connect(address, TIME_OUT);
+            return socket;
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    public static Socket connectWithoutVPN(InetSocketAddress address) {
+        try {
+            //Socket socket = new Socket();
+            SocketChannel socketChannel = SocketChannel.open();
+            socketChannel.configureBlocking(true);
+            Socket socket = SocketChannel.open().socket();
+            LocalVpnService.Instance.protect(socket);
+            System.out.println("==================================");
             socket.connect(address, TIME_OUT);
             return socket;
         } catch (IOException e) {

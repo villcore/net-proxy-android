@@ -33,7 +33,7 @@ public class NetProxyTunnel extends Tunnel {
     private static InetSocketAddress remoteAddr = new InetSocketAddress(NetProxyConfig.remoteAddr, Integer.valueOf(NetProxyConfig.remotePort));
 
     public NetProxyTunnel(Config config, Selector selector) throws Exception {
-        super(config.ServerAddress, selector);
+        super(remoteAddr, selector);
         m_Config = config;
 
         crypt = new Crypt();

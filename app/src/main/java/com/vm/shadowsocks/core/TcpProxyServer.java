@@ -56,7 +56,7 @@ public class TcpProxyServer implements Runnable {
     public void run() {
 
         //int listenPort = Integer.valueOf("50082");
-        String remoteAddr = "207.246.98.97";
+        String remoteAddr = "192.168.8.101";
         int remotePort = Integer.valueOf("60082");
 
         InetSocketAddress remoteAddress = new InetSocketAddress(remoteAddr, remotePort);
@@ -67,9 +67,24 @@ public class TcpProxyServer implements Runnable {
 
         try {
             serverSocket = new ServerSocket(Port & 0xFFFF);
+
             while (!stopped) {
                 Socket localSocket = serverSocket.accept();
-                Socket remoteSocket = SocketUtil.connect(remoteAddress);
+                //LocalVpnService.Instance.protect(localSocket);
+
+//                System.out.println("accept connection ..." + localSocket.getRemoteSocketAddress().toString());
+//                InetSocketAddress destAddress = getDestAddress(localSocket);
+//                Log.d(TAG, "dest addr = " + destAddress.toString());
+//                if (destAddress != null) {
+//
+//                    } else {
+//                    Log.d(TAG, String.format("Error: socket(%s:%d) target host is null.", localSocket.getInetAddress().toString(), localSocket.getPort()));
+//                    continue;
+//                }
+
+                Socket remoteSocket = SocketUtil.connectWithoutVPN(remoteAddress);
+                //LocalVpnService.Instance.protect(remoteSocket);//保护socket不走vpn
+
                 if(remoteSocket == null) {
                     Log.d(TAG, String.format("can not connect remote server [%s:%s] ...", remoteAddr, remotePort));
                     localSocket.close();
@@ -103,5 +118,21 @@ public class TcpProxyServer implements Runnable {
 
     public void remoteConnection(Connection connection) {
         connections.remove(connection);
+    }
+
+    private InetSocketAddress getDestAddress(Socket socket) {
+        short portKey = (short) socket.getPort();
+        NatSession session = NatSessionManager.getSession(portKey);
+
+        if (session != null) {
+            if (ProxyConfig.Instance.needProxy(session.RemoteHost, session.RemoteIP)) {
+                if (ProxyConfig.IS_DEBUG)
+                    System.out.printf("%d/%d:[PROXY] %s=>%s:%d\n", NatSessionManager.getSessionCount(), Tunnel.SessionCount, session.RemoteHost, CommonMethods.ipIntToString(session.RemoteIP), session.RemotePort & 0xFFFF);
+                return InetSocketAddress.createUnresolved(session.RemoteHost, session.RemotePort & 0xFFFF);
+            } else {
+                return new InetSocketAddress(socket.getInetAddress(), session.RemotePort & 0xFFFF);
+            }
+        }
+        return null;
     }
 }
