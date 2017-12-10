@@ -4,14 +4,22 @@ import android.util.Log;
 
 import com.vm.shadowsocks.tcpip.CommonMethods;
 import com.vm.shadowsocks.tunnel.Tunnel;
+import com.vm.shadowsocks.tunnel.villcore.bio.client.ClientConnection;
+import com.vm.shadowsocks.tunnel.villcore.bio.common.Connection;
+import com.vm.shadowsocks.tunnel.villcore.bio.util.SocketUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * NIO ServerSocket
@@ -20,22 +28,17 @@ public class TcpProxyServer implements Runnable {
     private static final String TAG = TcpProxyServer.class.getSimpleName();
 
     //是否停止
-    public boolean stopped;
+    public volatile boolean stopped;
+
     //端口
     public short Port;
 
-    Selector m_Selector;
-    ServerSocketChannel m_ServerSocketChannel;
     Thread m_ServerThread;
 
-    public TcpProxyServer(int port) throws IOException {
-        m_Selector = Selector.open();
-        m_ServerSocketChannel = ServerSocketChannel.open();
-        m_ServerSocketChannel.configureBlocking(false);
-        m_ServerSocketChannel.socket().bind(new InetSocketAddress(port));
-        m_ServerSocketChannel.register(m_Selector, SelectionKey.OP_ACCEPT);
+    private final List<Connection> connections = Collections.synchronizedList(new LinkedList<Connection>());
 
-        this.Port = (short) m_ServerSocketChannel.socket().getLocalPort();
+    public TcpProxyServer(int port) throws IOException {
+        this.Port = (short) port;
         System.out.printf("AsyncTcpServer listen on %d success.\n", this.Port & 0xFFFF);
     }
 
@@ -47,101 +50,58 @@ public class TcpProxyServer implements Runnable {
 
     public void stop() {
         this.stopped = true;
-        if (m_Selector != null) {
-            try {
-                m_Selector.close();
-                m_Selector = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (m_ServerSocketChannel != null) {
-            try {
-                m_ServerSocketChannel.close();
-                m_ServerSocketChannel = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
     public void run() {
+
+        //int listenPort = Integer.valueOf("50082");
+        String remoteAddr = "207.246.98.97";
+        int remotePort = Integer.valueOf("60082");
+
+        InetSocketAddress remoteAddress = new InetSocketAddress(remoteAddr, remotePort);
+
+        ServerSocket serverSocket = null;
+
+        final ServerSocket finalServerSocket = serverSocket;
+
         try {
-            while (true) {
-                m_Selector.select();
-                Iterator<SelectionKey> keyIterator = m_Selector.selectedKeys().iterator();
-                while (keyIterator.hasNext()) {
-                    SelectionKey key = keyIterator.next();
-                    if (key.isValid()) {
-                        try {
-                            if (key.isReadable()) {
-                                ((Tunnel) key.attachment()).onReadable(key);
-                            } else if (key.isWritable()) {
-                                ((Tunnel) key.attachment()).onWritable(key);
-                            } else if (key.isConnectable()) {
-                                ((Tunnel) key.attachment()).onConnectable();
-                            } else if (key.isAcceptable()) {
-                                onAccepted(key);
-                            }
-                        } catch (Exception e) {
-                            System.out.println(e.toString());
-                        }
-                    }
-                    keyIterator.remove();
+            serverSocket = new ServerSocket(Port & 0xFFFF);
+            while (!stopped) {
+                Socket localSocket = serverSocket.accept();
+                Socket remoteSocket = SocketUtil.connect(remoteAddress);
+                if(remoteSocket == null) {
+                    Log.d(TAG, String.format("can not connect remote server [%s:%s] ...", remoteAddr, remotePort));
+                    localSocket.close();
+                    continue;
+                }
+
+                SocketUtil.configSocket(localSocket);
+                SocketUtil.configSocket(remoteSocket);
+
+                ClientConnection connection = new ClientConnection(this, localSocket, remoteSocket, "villcore");
+                connection.start();
+                connections.add(connection);
+            }
+
+            if(finalServerSocket != null) {
+                try {
+                    finalServerSocket.close();
+                } catch (IOException e) {
+                    Log.d(TAG, e.getMessage());
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            this.stop();
-            System.out.println("TcpServer thread exited.");
+
+            for(Connection connection : connections) {
+                connection.stop();
+            }
+
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
         }
     }
 
-    InetSocketAddress getDestAddress(SocketChannel localChannel) {
-        short portKey = (short) localChannel.socket().getPort();
-        NatSession session = NatSessionManager.getSession(portKey);
-
-        if (session != null) {
-            if (ProxyConfig.Instance.needProxy(session.RemoteHost, session.RemoteIP)) {
-                if (ProxyConfig.IS_DEBUG)
-                    System.out.printf("%d/%d:[PROXY] %s=>%s:%d\n", NatSessionManager.getSessionCount(), Tunnel.SessionCount, session.RemoteHost, CommonMethods.ipIntToString(session.RemoteIP), session.RemotePort & 0xFFFF);
-                return InetSocketAddress.createUnresolved(session.RemoteHost, session.RemotePort & 0xFFFF);
-            } else {
-                return new InetSocketAddress(localChannel.socket().getInetAddress(), session.RemotePort & 0xFFFF);
-            }
-        }
-        return null;
+    public void remoteConnection(Connection connection) {
+        connections.remove(connection);
     }
-
-    private void onAccepted(SelectionKey key) {
-        Tunnel localTunnel = null;
-        try {
-            //local
-            SocketChannel localChannel = m_ServerSocketChannel.accept();
-            localTunnel = TunnelFactory.wrap(localChannel, m_Selector);
-
-            //create remote
-            InetSocketAddress destAddress = getDestAddress(localChannel);
-            Log.d(TAG, "dest addr = " + destAddress.toString());
-            if (destAddress != null) {
-                Tunnel remoteTunnel = TunnelFactory.createTunnelByConfig(destAddress, m_Selector);
-                remoteTunnel.setBrotherTunnel(localTunnel);//关联兄弟
-                localTunnel.setBrotherTunnel(remoteTunnel);//关联兄弟
-                remoteTunnel.connect(destAddress);//开始连接
-            } else {
-                Log.d(TAG, String.format("Error: socket(%s:%d) target host is null.", localChannel.socket().getInetAddress().toString(), localChannel.socket().getPort()));
-                localTunnel.dispose();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d(TAG, String.format("Error: remote socket create failed: %s", e.toString()));
-            if (localTunnel != null) {
-                localTunnel.dispose();
-            }
-        }
-    }
-
 }

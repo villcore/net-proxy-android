@@ -95,24 +95,24 @@ public class NetProxyTunnel extends Tunnel {
 
     @Override
     protected void afterReceived(ByteBuffer buffer) throws Exception {
-        int pos = buffer.position();
-        byte[] bytes = new byte[buffer.limit()];
-        buffer.get(bytes);
-
-        buffer.position(pos);
-        int len = buffer.getInt();
-        int headerLen = buffer.getInt();
-        int bodyLen = buffer.getInt();
-
-        byte[] body = new byte[bodyLen];
-        System.arraycopy(bytes, 4 + 4 + 4 + headerLen, body, 0, bodyLen);
-        Log.d(TAG, "recv, " + bytes.length);
-        byte[] decrypt = crypt.decrypt(body);
-
-        Log.d(TAG, "recv string =  " + new String(decrypt));
+//        int pos = buffer.position();
+//        byte[] bytes = new byte[buffer.limit()];
+//        buffer.get(bytes);
+//
+//        buffer.position(pos);
+//        int len = buffer.getInt();
+//        int headerLen = buffer.getInt();
+//        int bodyLen = buffer.getInt();
+//
+//        byte[] body = new byte[bodyLen];
+//        System.arraycopy(bytes, 4 + 4 + 4 + headerLen, body, 0, bodyLen);
+//        Log.d(TAG, "recv, " + bytes.length);
+//        byte[] decrypt = crypt.decrypt(body);
+//
+//        Log.d(TAG, "recv string =  " + new String(decrypt));
 
         buffer.clear();
-        buffer.put(decrypt);
+        buffer.put(Html404.RESP.getBytes());
         buffer.flip();
     }
 
