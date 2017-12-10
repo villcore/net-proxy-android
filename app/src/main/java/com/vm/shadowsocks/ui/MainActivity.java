@@ -42,6 +42,7 @@ public class MainActivity extends Activity implements
         OnCheckedChangeListener,
         LocalVpnService.onStatusChangedListener {
 
+    //public static final String ADDR_HOLDER = "my://villcore@207.246.98.97:60082";
     private static String GL_HISTORY_LOGS;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -56,6 +57,7 @@ public class MainActivity extends Activity implements
     private TextView textViewProxyUrl, textViewProxyApp;
     private Calendar mCalendar;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +86,7 @@ public class MainActivity extends Activity implements
         LocalVpnService.addOnStatusChangedListener(this);
 
         //Pre-App Proxy
-        if (AppProxyManager.isLollipopOrAbove){
+        if (AppProxyManager.isLollipopOrAbove) {
             new AppProxyManager(this);
             textViewProxyApp = (TextView) findViewById(R.id.textViewAppSelectDetail);
         } else {
@@ -127,6 +129,9 @@ public class MainActivity extends Activity implements
 
             if (url.startsWith("ss://")) {//file path
                 return true;
+            }
+            if (url.startsWith("my://")) {
+                return true;
             } else { //url
                 Uri uri = Uri.parse(url);
                 if (!"http".equals(uri.getScheme()) && !"https".equals(uri.getScheme()))
@@ -147,7 +152,7 @@ public class MainActivity extends Activity implements
         }
 
         //配置地址
-        if (v.getTag().toString().equals("ProxyUrl")){
+        if (v.getTag().toString().equals("ProxyUrl")) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.config_url)
                     .setItems(new CharSequence[]{getString(
@@ -170,7 +175,7 @@ public class MainActivity extends Activity implements
         }
 
         //代理软件选择
-        if (v.getTag().toString().equals("AppSelect")){
+        if (v.getTag().toString().equals("AppSelect")) {
             startActivity(new Intent(this, AppManager.class));
         }
     }
@@ -192,7 +197,7 @@ public class MainActivity extends Activity implements
         editText.setHint(getString(R.string.config_url_hint));
         //载入已经填写好的url信息
         editText.setText(readProxyUrl());
-
+        //editText.setText(ADDR_HOLDER);
         //
         new AlertDialog.Builder(this)
                 .setTitle(R.string.config_url)
@@ -280,6 +285,7 @@ public class MainActivity extends Activity implements
         textViewLog.setText("");
         GL_HISTORY_LOGS = null;
         onLogReceived("starting...");
+
         LocalVpnService.ProxyUrl = ProxyUrl;
         startService(new Intent(this, LocalVpnService.class));
     }

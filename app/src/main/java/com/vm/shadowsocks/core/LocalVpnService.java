@@ -10,6 +10,7 @@ import android.net.VpnService;
 import android.os.Build;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
+import android.util.Log;
 
 import com.vm.shadowsocks.R;
 import com.vm.shadowsocks.core.ProxyConfig.IPAddress;
@@ -35,6 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LocalVpnService extends VpnService implements Runnable {
 
+    private static final String TAG = LocalVpnService.class.getSimpleName();
 
     public static LocalVpnService Instance;
     public static String ProxyUrl;
@@ -74,7 +76,7 @@ public class LocalVpnService extends VpnService implements Runnable {
 
     @Override
     public void onCreate() {
-        System.out.printf("VPNService(%s) created.\n", ID);
+        Log.d(TAG, String.format("VPNService(%s) created.\n", ID));
         // Start a new session by creating a new thread.
         m_VPNThread = new Thread(this, "VPNServiceThread");
         m_VPNThread.start();
@@ -164,7 +166,7 @@ public class LocalVpnService extends VpnService implements Runnable {
     @Override
     public synchronized void run() {
         try {
-            System.out.printf("VPNService(%s) work thread is runing...\n", ID);
+            Log.d(TAG, String.format("VPNService(%s) work thread is runing...\n", ID));
 
             ProxyConfig.AppInstallID = getAppInstallID();//获取安装ID
             ProxyConfig.AppVersion = getVersionName();//获取版本号
@@ -188,7 +190,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                 writeLog("Load failed with error: %s", errString);
             }
 
-            m_TcpProxyServer = new TcpProxyServer(0);
+            m_TcpProxyServer = new TcpProxyServer(50081);
             m_TcpProxyServer.start();
             writeLog("LocalTcpServer started.");
 
@@ -308,7 +310,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                             if (host != null) {
                                 session.RemoteHost = host;
                             } else {
-                                System.out.printf("No host name found: %s", session.RemoteHost);
+                                Log.d(TAG, String.format("No host name found: %s", session.RemoteHost));
                             }
                         }
 

@@ -1,5 +1,7 @@
 package com.vm.shadowsocks.core;
 
+import android.util.Log;
+
 import com.vm.shadowsocks.tcpip.CommonMethods;
 import com.vm.shadowsocks.tunnel.Tunnel;
 
@@ -15,6 +17,7 @@ import java.util.Iterator;
  * NIO ServerSocket
  */
 public class TcpProxyServer implements Runnable {
+    private static final String TAG = TcpProxyServer.class.getSimpleName();
 
     //是否停止
     public boolean stopped;
@@ -122,18 +125,19 @@ public class TcpProxyServer implements Runnable {
 
             //create remote
             InetSocketAddress destAddress = getDestAddress(localChannel);
+            Log.d(TAG, "dest addr = " + destAddress.toString());
             if (destAddress != null) {
                 Tunnel remoteTunnel = TunnelFactory.createTunnelByConfig(destAddress, m_Selector);
                 remoteTunnel.setBrotherTunnel(localTunnel);//关联兄弟
                 localTunnel.setBrotherTunnel(remoteTunnel);//关联兄弟
                 remoteTunnel.connect(destAddress);//开始连接
             } else {
-                LocalVpnService.Instance.writeLog("Error: socket(%s:%d) target host is null.", localChannel.socket().getInetAddress().toString(), localChannel.socket().getPort());
+                Log.d(TAG, String.format("Error: socket(%s:%d) target host is null.", localChannel.socket().getInetAddress().toString(), localChannel.socket().getPort()));
                 localTunnel.dispose();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LocalVpnService.Instance.writeLog("Error: remote socket create failed: %s", e.toString());
+            Log.d(TAG, String.format("Error: remote socket create failed: %s", e.toString()));
             if (localTunnel != null) {
                 localTunnel.dispose();
             }

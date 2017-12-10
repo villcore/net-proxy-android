@@ -7,6 +7,7 @@ import com.vm.shadowsocks.tcpip.CommonMethods;
 import com.vm.shadowsocks.tunnel.Config;
 import com.vm.shadowsocks.tunnel.httpconnect.HttpConnectConfig;
 import com.vm.shadowsocks.tunnel.shadowsocks.ShadowsocksConfig;
+import com.vm.shadowsocks.tunnel.villcore.MyProxyConfig;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -372,7 +373,10 @@ public class ProxyConfig {
 
     public void addProxyToList(String proxyString) throws Exception {
         Config config = null;
-        if (proxyString.startsWith("ss://")) {
+        if (proxyString.startsWith("my://")) {
+            config = MyProxyConfig.parse(proxyString);
+        }
+        else if (proxyString.startsWith("ss://")) {
             config = ShadowsocksConfig.parse(proxyString);
         } else {
             if (!proxyString.toLowerCase().startsWith("http://")) {

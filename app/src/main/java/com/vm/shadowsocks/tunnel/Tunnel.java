@@ -128,6 +128,7 @@ public abstract class Tunnel {
             if (bytesRead > 0) {
                 buffer.flip();
                 afterReceived(buffer);//先让子类处理，例如解密数据。
+
                 if (isTunnelEstablished() && buffer.hasRemaining()) {//将读到的数据，转发给兄弟。
                     m_BrotherTunnel.beforeSend(buffer);//发送之前，先让子类处理，例如做加密等。
                     if (!m_BrotherTunnel.write(buffer, true)) {

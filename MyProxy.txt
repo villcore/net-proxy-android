@@ -1,0 +1,3 @@
+url格式
+my://password@remote_addr:remote_port
+my://villcore@207.246.98.97:60082
