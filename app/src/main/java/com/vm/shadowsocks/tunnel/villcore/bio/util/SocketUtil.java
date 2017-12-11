@@ -1,24 +1,22 @@
 package com.vm.shadowsocks.tunnel.villcore.bio.util;
 
+import android.util.Log;
+
 import com.vm.shadowsocks.core.LocalVpnService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.channels.SocketChannel;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Created by villcore on 2017/7/17.
  */
 public class SocketUtil {
-    private static final Logger LOG = LoggerFactory.getLogger(Socket.class);
+    private static final String TAG = SocketUtil.class.getSimpleName();
 
     private static final int TIME_OUT = 2 * 60 * 1000;
 
@@ -28,7 +26,7 @@ public class SocketUtil {
             socket.connect(address, TIME_OUT);
             return socket;
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            Log.e(TAG, e.getMessage());
             return null;
         }
     }
@@ -43,7 +41,7 @@ public class SocketUtil {
             socket.connect(address, TIME_OUT);
             return socket;
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            Log.e(TAG, e.getMessage());
             return null;
         }
     }
@@ -63,7 +61,7 @@ public class SocketUtil {
 //            }
             return socket;
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            Log.e(TAG, e.getMessage());
             return null;
         }
     }

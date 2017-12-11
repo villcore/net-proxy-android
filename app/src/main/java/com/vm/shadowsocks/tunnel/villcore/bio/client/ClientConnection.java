@@ -9,9 +9,6 @@ import com.vm.shadowsocks.tunnel.villcore.bio.handler.EncryptHandler;
 import com.vm.shadowsocks.tunnel.villcore.bio.handler.Handler;
 import com.vm.shadowsocks.tunnel.villcore.crypt.Crypt;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.crypto.NoSuchPaddingException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,7 +19,6 @@ import java.security.NoSuchAlgorithmException;
  * Created by villcore on 2017/7/17.
  */
 public class ClientConnection extends Connection {
-    private static final Logger LOG = LoggerFactory.getLogger(ClientConnection.class);
 
     private String password;
 

@@ -1,9 +1,8 @@
 package com.vm.shadowsocks.tunnel.villcore.bio.common;
 
-import com.vm.shadowsocks.core.TcpProxyServer;
+import android.util.Log;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.vm.shadowsocks.core.TcpProxyServer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +13,7 @@ import java.net.Socket;
  * Created by villcore on 2017/7/17.
  */
 public abstract class Connection {
-    private static final Logger LOG = LoggerFactory.getLogger(Connection.class);
+    private static final String TAG = Connection.class.getSimpleName();
 
     private TcpProxyServer tcpProxyServer;
 
@@ -81,11 +80,10 @@ public abstract class Connection {
     public void start() {
         try {
             init();
-            LOG.debug("init finished...");
             bytesToPackageTask.start();
             packageToBytesTask.start();
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            Log.e(TAG, e.getMessage());
             stop();
             close();
             tcpProxyServer.remoteConnection(this);
@@ -108,7 +106,7 @@ public abstract class Connection {
                 inputStream.close();
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -118,7 +116,7 @@ public abstract class Connection {
                 outputStream.close();
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -137,7 +135,7 @@ public abstract class Connection {
             try {
                 socket.close();
             } catch (IOException e) {
-                LOG.error(e.getMessage(), e);
+                Log.e(TAG, e.getMessage());
             }
         }
     }

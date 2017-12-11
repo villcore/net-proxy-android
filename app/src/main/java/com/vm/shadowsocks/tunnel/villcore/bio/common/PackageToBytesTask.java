@@ -1,10 +1,9 @@
 package com.vm.shadowsocks.tunnel.villcore.bio.common;
 
+import android.util.Log;
+
 import com.vm.shadowsocks.tunnel.villcore.bio.handler.Handler;
 import com.vm.shadowsocks.tunnel.villcore.bio.pkg2.Package;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +14,6 @@ import java.util.Map;
  * Created by villcore on 2017/7/18.
  */
 public class PackageToBytesTask implements Runnable {
-    private static final Logger LOG = LoggerFactory.getLogger(PackageToBytesTask.class);
     private static final String TAG = PackageToBytesTask.class.getSimpleName();
 
     private volatile boolean running = false;
@@ -61,7 +59,7 @@ public class PackageToBytesTask implements Runnable {
                     pkg.writePackageWithoutHeader(outputStream);
                 }
             } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
+                Log.e(TAG, e.getMessage());
                 stop();
             }
         }

@@ -2,9 +2,6 @@ package com.vm.shadowsocks.tunnel.villcore.bio.pkg2;
 
 import com.vm.shadowsocks.tunnel.villcore.bio.util.ByteArrayUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,7 +15,6 @@ import java.nio.ByteBuffer;
  * [SIZE (INT)] + [HEADER_SIZE (INT)] + [BODY_SIZE (INT)] + [HEADER (BYTE ARRAY)] + [BODY (BYTE ARRAY)]
  */
 public class Package {
-    private static final Logger LOG = LoggerFactory.getLogger(Package.class);
 
     private static final byte[] EMPTY_BYTE_ARRAY = new byte[]{};
 
@@ -80,13 +76,10 @@ public class Package {
         byte[] metaBytes = new byte[PkgConf.getPackageMetaLen()];
         readFully(inputStream, metaBytes);
 
-        LOG.debug("read meta finish ....");
         ByteBuffer byteBuffer = ByteBuffer.wrap(metaBytes);
         int size = byteBuffer.getInt();
         int headerLen = byteBuffer.getInt();
         int bodyLen = byteBuffer.getInt();
-
-        LOG.debug("size = {}, headerLen = {}, bodyLen = {}", size, headerLen, bodyLen);
 
         if(size < 0 || size > 10 * 1024 * 1024){
             throw new IOException("illegal byte size...");
@@ -145,7 +138,6 @@ public class Package {
         int readSize = 0;
 
         while(true) {
-            LOG.debug("read fully 2 {}, {}, {}", bytes.length, pos, readSize);
             if((pos = inputStream.read(bytes, readSize, bytes.length - readSize)) > 0) {
                 //LOG.debug("pso = {}", pos);
                 readSize += pos;

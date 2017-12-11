@@ -3,14 +3,10 @@ package com.vm.shadowsocks.tunnel.villcore.bio.handler;
 import com.vm.shadowsocks.tunnel.villcore.bio.pkg2.Package;
 import com.vm.shadowsocks.tunnel.villcore.crypt.Crypt;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.ByteBuffer;
 
 
 public class EncryptHandler implements Handler {
-    private static final Logger LOG = LoggerFactory.getLogger(EncryptHandler.class);
 
     private Crypt crypt;
     private boolean ivSend;
