@@ -208,7 +208,6 @@ public class LocalVpnService extends VpnService implements Runnable {
                         ProxyConfig.Instance.addProxyToList(ProxyUrl);
                         writeLog("Proxy is: %s", ProxyConfig.Instance.getDefaultProxy());
                     } catch (Exception e) {
-                        ;
                         String errString = e.getMessage();
                         if (errString == null || errString.isEmpty()) {
                             errString = e.toString();
@@ -412,14 +411,18 @@ public class LocalVpnService extends VpnService implements Runnable {
             if (AppProxyManager.Instance.proxyAppInfo.size() == 0){
                 writeLog("Proxy All Apps");
             }
-            for (AppInfo app : AppProxyManager.Instance.proxyAppInfo){
-                builder.addAllowedApplication("com.vm.shadowsocks");//需要把自己加入代理，不然会无法进行网络连接
-                try{
-                    builder.addAllowedApplication(app.getPkgName());
-                    writeLog("Proxy App: " + app.getAppLabel());
-                } catch (Exception e){
-                    e.printStackTrace();
-                    writeLog("Proxy App Fail: " + app.getAppLabel());
+
+            if(!ProxyConfig.Instance.globalMode) {
+                for (AppInfo app : AppProxyManager.Instance.proxyAppInfo) {
+
+                    builder.addAllowedApplication("com.vm.shadowsocks");//需要把自己加入代理，不然会无法进行网络连接
+                    try {
+                        builder.addAllowedApplication(app.getPkgName());
+                        writeLog("Proxy App: " + app.getAppLabel());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        writeLog("Proxy App Fail: " + app.getAppLabel());
+                    }
                 }
             }
         } else {
@@ -432,7 +435,9 @@ public class LocalVpnService extends VpnService implements Runnable {
 
         builder.setSession(ProxyConfig.Instance.getSessionName());
         ParcelFileDescriptor pfdDescriptor = builder.establish();
-        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true);
+//        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_connected_status), true);
+        onStatusChanged(getString(R.string.vpn_connected_status), true);
+
         return pfdDescriptor;
     }
 
@@ -445,7 +450,8 @@ public class LocalVpnService extends VpnService implements Runnable {
         } catch (Exception e) {
             // ignore
         }
-        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_disconnected_status), false);
+//        onStatusChanged(ProxyConfig.Instance.getSessionName() + getString(R.string.vpn_disconnected_status), false);
+        onStatusChanged(getString(R.string.vpn_disconnected_status), false);
         this.m_VPNOutputStream = null;
     }
 

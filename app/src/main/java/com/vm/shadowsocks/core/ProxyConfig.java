@@ -214,6 +214,7 @@ public class ProxyConfig {
         if (globalMode) {
             return true;
         }
+
         if (host != null) {
             Boolean stateBoolean = getDomainState(host);
             if (stateBoolean != null) {

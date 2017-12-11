@@ -42,7 +42,6 @@ public class MainActivity extends Activity implements
         OnCheckedChangeListener,
         LocalVpnService.onStatusChangedListener {
 
-    //public static final String ADDR_HOLDER = "my://villcore@207.246.98.97:60082";
     private static String GL_HISTORY_LOGS;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -349,7 +348,7 @@ public class MainActivity extends Activity implements
                         .setNegativeButton(R.string.btn_more, new OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dawei101/shadowsocks-android-java")));
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/villcore/net-proxy-android")));
                             }
                         })
                         .show();

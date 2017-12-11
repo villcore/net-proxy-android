@@ -61,6 +61,7 @@ public class AppProxyManager {
     private void readProxyAppsList() {
         SharedPreferences preferences = mContext.getSharedPreferences("shadowsocksProxyUrl", MODE_PRIVATE);
         String tmpString = preferences.getString(PROXY_APPS, "");
+
         try {
             if (proxyAppInfo != null){
                 proxyAppInfo.clear();

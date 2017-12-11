@@ -1,11 +1,8 @@
 package com.vm.shadowsocks.tunnel.villcore.bio.common;
 
-import android.util.Log;
-
 import com.vm.shadowsocks.tunnel.villcore.bio.handler.Handler;
 import com.vm.shadowsocks.tunnel.villcore.bio.pkg2.Package;
 
-import org.bouncycastle.util.Pack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
