@@ -3,6 +3,7 @@ package com.vm.shadowsocks.core;
 import android.util.Log;
 
 import com.vm.shadowsocks.tcpip.CommonMethods;
+import com.vm.shadowsocks.tunnel.Config;
 import com.vm.shadowsocks.tunnel.Tunnel;
 import com.vm.shadowsocks.tunnel.villcore.bio.client.ClientConnection;
 import com.vm.shadowsocks.tunnel.villcore.bio.common.Connection;
@@ -43,6 +44,10 @@ public class TcpProxyServer implements Runnable {
                     "Proxy-Connection: keep-alive\r\n" +
                     "\r\n\r\n";
 
+    public static String remoteAddr;
+    public static String remotePort;
+    public static String remotePassword;
+
     public TcpProxyServer(int port) throws IOException {
         this.Port = (short) port;
         System.out.printf("AsyncTcpServer listen on %d success.\n", this.Port & 0xFFFF);
@@ -60,13 +65,6 @@ public class TcpProxyServer implements Runnable {
 
     @Override
     public void run() {
-
-        //int listenPort = Integer.valueOf("50082");
-        String remoteAddr = "192.168.8.101";
-        int remotePort = Integer.valueOf("60082");
-
-        InetSocketAddress remoteAddress = new InetSocketAddress(remoteAddr, remotePort);
-
         ServerSocket serverSocket = null;
 
         final ServerSocket finalServerSocket = serverSocket;
@@ -78,7 +76,9 @@ public class TcpProxyServer implements Runnable {
                 Socket localSocket = serverSocket.accept();
                 Log.d(TAG, "accept connection ..." + localSocket.getRemoteSocketAddress().toString());
 
-                Socket remoteSocket = SocketUtil.connectWithoutVPN(remoteAddress);
+                Log.d(TAG, "remote addr = " + remoteAddr + ", remote port = " + remotePort + ", remotePassword = " + remotePassword);
+
+                Socket remoteSocket = SocketUtil.connectWithoutVPN(new InetSocketAddress(remoteAddr, Integer.valueOf(remotePort)));
 
                 if (remoteSocket == null) {
                     Log.d(TAG, String.format("can not connect remote server [%s:%s] ...", remoteAddr, remotePort));
@@ -86,7 +86,7 @@ public class TcpProxyServer implements Runnable {
                     continue;
                 }
 
-                Connection connection = new ClientConnection(this, localSocket, remoteSocket, "villcore");
+                Connection connection = new ClientConnection(this, localSocket, remoteSocket, remotePassword);
                 InetSocketAddress destAddress = getDestAddress(localSocket);
                 Log.d(TAG, "dest addr = " + destAddress.toString());
                 Log.d(TAG, "dest port = " + destAddress.getPort());

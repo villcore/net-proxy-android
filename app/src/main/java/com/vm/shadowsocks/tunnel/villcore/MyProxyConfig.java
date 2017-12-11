@@ -3,6 +3,7 @@ package com.vm.shadowsocks.tunnel.villcore;
 import android.net.Uri;
 import android.util.Base64;
 
+import com.vm.shadowsocks.core.TcpProxyServer;
 import com.vm.shadowsocks.tunnel.Config;
 import com.vm.shadowsocks.tunnel.shadowsocks.CryptFactory;
 
@@ -28,6 +29,10 @@ public class MyProxyConfig extends Config {
         System.out.println("password = " + password);
         System.out.println("remoteAddr = " + remoteAddr);
         System.out.println("remotePort = " + remotePort);
+
+        TcpProxyServer.remoteAddr = remoteAddr;
+        TcpProxyServer.remotePort = remotePort;
+        TcpProxyServer.remotePassword = password;
 
         return config;
     }

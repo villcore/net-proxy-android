@@ -53,12 +53,13 @@ public class PackageToBytesTask implements Runnable {
                     pkg = entry.getValue().handle(pkg);
                 }
 
+                String resp2 = new String(pkg.getBody(), "utf-8");
+                //Log.d(TAG, "get resp = " + resp2);
                 if(connection.https && !connection.connectRespGet) {
                     String resp = new String(pkg.getBody(), "utf-8");
                     if(resp.contains("Connection Established")) {
                         connection.connectRespGet = true;
                     }
-                    LOG.debug(TAG, "connect resp = " + resp);
                 } else {
                     pkg.writePackageWithoutHeader(outputStream);
                 }

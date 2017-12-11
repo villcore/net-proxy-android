@@ -34,7 +34,7 @@ public class ClientConnection extends Connection {
     @Override
     public void initTask(InputStream inputStream, OutputStream outputStream, InputStream inputStream2, OutputStream outputStream2, BytesToPackageTask bytesToPackageTask, PackageToBytesTask packageToBytesTask, Connection connection) throws NoSuchPaddingException, NoSuchAlgorithmException {
         Crypt crypt = new Crypt();
-        byte[] key = crypt.generateKey("villcore");
+        byte[] key = crypt.generateKey(this.password);
         byte[] iv = crypt.generateIv();
 
         crypt.setIv(iv);

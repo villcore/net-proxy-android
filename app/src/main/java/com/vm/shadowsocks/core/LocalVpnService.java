@@ -202,7 +202,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                 if (IsRunning) {
                     //加载配置文件
 
-                    writeLog("set shadowsocks/(http proxy)");
+                    writeLog("set net proxy /(http proxy)");
                     try {
                         ProxyConfig.Instance.m_ProxyList.clear();
                         ProxyConfig.Instance.addProxyToList(ProxyUrl);
@@ -269,7 +269,6 @@ public class LocalVpnService extends VpnService implements Runnable {
                 TCPHeader tcpHeader = m_TCPHeader;
                 tcpHeader.m_Offset = ipHeader.getHeaderLength();
 
-                Log.d(TAG, "get tcp data ...");
                 //本地IP, 127.0.0.1, localhost
                 if (ipHeader.getSourceIP() == LOCAL_IP) {
                     if (tcpHeader.getSourcePort() == m_TcpProxyServer.Port) {// 收到本地TCP服务器数据
@@ -310,7 +309,6 @@ public class LocalVpnService extends VpnService implements Runnable {
                             String host = HttpHostHeaderParser.parseHost(tcpHeader.m_Data, dataOffset, tcpDataSize);
                             if (host != null) {
                                 session.RemoteHost = host;
-                                Log.d(TAG, "request host = " + host);
 
                             } else {
                                 Log.d(TAG, String.format("No host name found: %s", session.RemoteHost));

@@ -9,7 +9,6 @@ public class HttpParser {
         for (int i = 0; i < httpRequest.length; i++) {
             if (httpRequest[i] == 10 || httpRequest[i] == 13) {
                 String firstLine = new String(httpRequest, 0, i);
-                System.out.println("request content ========== " + new String(httpRequest));
 
                 int start = 0, end = 0;
                 for (int j = 0; j < i; j++) {

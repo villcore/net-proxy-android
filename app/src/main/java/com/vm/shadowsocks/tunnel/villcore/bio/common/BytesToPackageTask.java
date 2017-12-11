@@ -57,23 +57,11 @@ public class BytesToPackageTask implements Runnable {
                     pkg.readPackageWithoutHeader(inputStream);
                 }
 
-                //LOG.debug("encryt read pkg...");
-                //LOG.debug("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-//                LOG.debug("read to encrypting request = >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n{}\n", new String(pkg.getBody()));
-                //LOG.debug("origin size = {}, header = {}, body = {}", pkg.getSize(), pkg.getHeaderLen(), pkg.getBodyLen());
-
-                Log.d(TAG, "send content = " + new String(pkg.getBody()));
-
                 for (Map.Entry<String, Handler> entry : handlers.entrySet()) {
                     pkg = entry.getValue().handle(pkg);
-                    //LOG.debug("encrypt [{}] handle package size = {}, header = {}, body = {}", new Object[]{entry.getKey(), pkg.getSize(), pkg.getHeaderLen(), pkg.getBodyLen()});
                 }
 
-                Log.d(TAG, "need write to os ... = ");
                 pkg.writePackageWithHeader(outputStream);
-                //LOG.debug("encryt write pkg ...");
-                Log.d(TAG, "write to os  finished ... = ");
-
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
                 stop();

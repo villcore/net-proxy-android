@@ -152,7 +152,6 @@ public class Crypt {
             crypt.initDecrypt();
 
             byte[] real = crypt.decrypt(readEncrypt);
-            System.out.println("--" + new String(real));
         } catch (IOException e) {
             e.printStackTrace();
         }
