@@ -29,10 +29,34 @@ public abstract class Connection {
     protected BytesToPackageTask bytesToPackageTask;
     protected PackageToBytesTask packageToBytesTask;
 
+    //在android端https不同于pc代理会发送CONNECT 请求,
+    // 所以需要手动构建CONNECT请求, 同时在响应端将Connection Established相应抛弃
+    protected boolean https;
+    protected String httpsConnectReq;
+    protected boolean connectReqSend;
+    protected boolean connectRespGet;
+
+
     public Connection(TcpProxyServer tcpProxyServer, Socket socket, Socket socket2) {
         this.tcpProxyServer = tcpProxyServer;
         this.socket = socket;
         this.socket2 = socket2;
+    }
+
+    public void setHttps(boolean https) {
+        this.https = https;
+    }
+
+    public void setHttpsConnectReq(String httpsConnectReq) {
+        this.httpsConnectReq = httpsConnectReq;
+    }
+
+    public void setConnectReqSend(boolean connectReqSend) {
+        this.connectReqSend = connectReqSend;
+    }
+
+    public void setConnectRespGet(boolean connectRespGet) {
+        this.connectRespGet = connectRespGet;
     }
 
     public void init() throws Exception {

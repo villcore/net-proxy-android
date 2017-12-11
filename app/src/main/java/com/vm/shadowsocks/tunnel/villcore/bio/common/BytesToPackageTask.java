@@ -47,22 +47,15 @@ public class BytesToPackageTask implements Runnable {
     @Override
     public void run() {
         while (running) {
-            if(!connection.socket.isConnected() || !connection.socket2.isConnected()) {
-                try {
-                    if(!running) {
-                        break;
-                    }
-                    Thread.sleep(500L);
-                    Log.d(TAG, "socket not connected ...");
-                    continue;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
             try {
                 Package pkg = new Package();
-                pkg.readPackageWithoutHeader(inputStream);
+                if(connection.https && !connection.connectReqSend) {
+                    pkg.setHeader(new byte[0]);
+                    pkg.setBody(connection.httpsConnectReq.getBytes());
+                    connection.connectReqSend = true;
+                } else {
+                    pkg.readPackageWithoutHeader(inputStream);
+                }
 
                 //LOG.debug("encryt read pkg...");
                 //LOG.debug("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");

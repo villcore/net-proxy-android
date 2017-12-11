@@ -45,18 +45,6 @@ public class PackageToBytesTask implements Runnable {
     @Override
     public void run() {
         while (running) {
-            if(!connection.socket.isConnected() || !connection.socket2.isConnected()) {
-                try {
-                    if(!running) {
-                        break;
-                    }
-                    Thread.sleep(500L);
-                    Log.d(TAG, "socket not connected ...");
-                    continue;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             try {
                 Package pkg = new Package();
                 pkg.readPackageWithHeader(inputStream);
@@ -64,10 +52,16 @@ public class PackageToBytesTask implements Runnable {
                 for (Map.Entry<String, Handler> entry : handlers.entrySet()) {
                     pkg = entry.getValue().handle(pkg);
                 }
-                pkg.writePackageWithoutHeader(outputStream);
-                System.out.println(">>>>>>>>>>>>>>" + pkg.getBody().length);
 
-                System.out.println("package to bytes  = " + new String(pkg.getBody()));
+                if(connection.https && !connection.connectRespGet) {
+                    String resp = new String(pkg.getBody(), "utf-8");
+                    if(resp.contains("Connection Established")) {
+                        connection.connectRespGet = true;
+                    }
+                    LOG.debug(TAG, "connect resp = " + resp);
+                } else {
+                    pkg.writePackageWithoutHeader(outputStream);
+                }
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
                 stop();

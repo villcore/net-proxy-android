@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Shadowsocks</string>
+    <string name="app_name">NetProxy</string>
     <string name="menu_item_toggle_global">Toggle global mode</string>
     <string name="menu_item_switch">Proxy</string>
     <string name="menu_item_about">About</string>
@@ -18,8 +18,8 @@
     <string name="btn_more">More&#8230;</string>
     <string name="vpn_connected_status">connected</string>
     <string name="vpn_disconnected_status">disconnected</string>
-    <string name="about_info">Shadowsocks-android is writen by dawei. It could run on any Android 4.0+ device , no need to root, and it is modified based on SmartProxy and Shadowsocks-Java</string>
+    <string name="about_info">NetProxy 客户端改造自 Shadowsocks-android (https://github.com/dawei101/shadowsocks-android-java) 针对net-proxy-go开发的兼容客户端</string>
     <string name="exit_confirm_info">This will disconnect the VPN connection, Are you sure to exit?</string>
     <string name="err_invalid_url">The config URL is invalid.</string>
-    <string name="config_url_hint">ss://method:password@host:port</string>
+    <string name="config_url_hint">my://password@ip:port</string>
 </resources>

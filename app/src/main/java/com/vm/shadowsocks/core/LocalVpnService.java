@@ -310,11 +310,12 @@ public class LocalVpnService extends VpnService implements Runnable {
                             String host = HttpHostHeaderParser.parseHost(tcpHeader.m_Data, dataOffset, tcpDataSize);
                             if (host != null) {
                                 session.RemoteHost = host;
+                                Log.d(TAG, "request host = " + host);
+
                             } else {
                                 Log.d(TAG, String.format("No host name found: %s", session.RemoteHost));
                             }
                             String req = new String(tcpHeader.m_Data, dataOffset, tcpDataSize);
-                            System.out.println(">>>req = " + req);
                         }
 
                         // 转发给本地TCP服务器
