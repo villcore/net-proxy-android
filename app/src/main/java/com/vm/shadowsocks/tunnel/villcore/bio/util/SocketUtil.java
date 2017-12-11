@@ -15,7 +15,7 @@ import java.net.SocketException;
 import java.nio.channels.SocketChannel;
 
 /**
- * Created by villcre on 2017/7/17.
+ * Created by villcore on 2017/7/17.
  */
 public class SocketUtil {
     private static final Logger LOG = LoggerFactory.getLogger(Socket.class);
@@ -35,12 +35,11 @@ public class SocketUtil {
 
     public static Socket connectWithoutVPN(InetSocketAddress address) {
         try {
-            //Socket socket = new Socket();
-            SocketChannel socketChannel = SocketChannel.open();
-            socketChannel.configureBlocking(true);
-            Socket socket = SocketChannel.open().socket();
+            Socket socket = new Socket();
+            socket.bind(new InetSocketAddress(0));
+            configSocket(socket);
+
             LocalVpnService.Instance.protect(socket);
-            System.out.println("==================================");
             socket.connect(address, TIME_OUT);
             return socket;
         } catch (IOException e) {

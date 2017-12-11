@@ -1,8 +1,11 @@
 package com.vm.shadowsocks.tunnel.villcore.bio.common;
 
+import android.util.Log;
+
 import com.vm.shadowsocks.tunnel.villcore.bio.handler.Handler;
 import com.vm.shadowsocks.tunnel.villcore.bio.pkg2.Package;
 
+import org.bouncycastle.util.Pack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,7 @@ import java.util.Map;
  */
 public class PackageToBytesTask implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(PackageToBytesTask.class);
+    private static final String TAG = PackageToBytesTask.class.getSimpleName();
 
     private volatile boolean running = false;
     private Map<String, Handler> handlers = new LinkedHashMap<>();
@@ -41,6 +45,18 @@ public class PackageToBytesTask implements Runnable {
     @Override
     public void run() {
         while (running) {
+            if(!connection.socket.isConnected() || !connection.socket2.isConnected()) {
+                try {
+                    if(!running) {
+                        break;
+                    }
+                    Thread.sleep(500L);
+                    Log.d(TAG, "socket not connected ...");
+                    continue;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             try {
                 Package pkg = new Package();
                 pkg.readPackageWithHeader(inputStream);

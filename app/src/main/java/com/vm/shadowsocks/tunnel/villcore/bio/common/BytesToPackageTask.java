@@ -1,5 +1,7 @@
 package com.vm.shadowsocks.tunnel.villcore.bio.common;
 
+import android.util.Log;
+
 import com.vm.shadowsocks.tunnel.villcore.bio.handler.Handler;
 import com.vm.shadowsocks.tunnel.villcore.bio.pkg2.Package;
 
@@ -19,6 +21,7 @@ import java.util.Map;
  */
 public class BytesToPackageTask implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(PackageToBytesTask.class);
+    private static final String TAG = BytesToPackageTask.class.getSimpleName();
 
     private volatile boolean running = false;
     private Map<String, Handler> handlers = new LinkedHashMap<>();
@@ -44,6 +47,19 @@ public class BytesToPackageTask implements Runnable {
     @Override
     public void run() {
         while (running) {
+            if(!connection.socket.isConnected() || !connection.socket2.isConnected()) {
+                try {
+                    if(!running) {
+                        break;
+                    }
+                    Thread.sleep(500L);
+                    Log.d(TAG, "socket not connected ...");
+                    continue;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
             try {
                 Package pkg = new Package();
                 pkg.readPackageWithoutHeader(inputStream);
@@ -52,13 +68,18 @@ public class BytesToPackageTask implements Runnable {
                 //LOG.debug("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
 //                LOG.debug("read to encrypting request = >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n{}\n", new String(pkg.getBody()));
                 //LOG.debug("origin size = {}, header = {}, body = {}", pkg.getSize(), pkg.getHeaderLen(), pkg.getBodyLen());
-                System.out.println("send content = " + new String(pkg.getBody()));
+
+                Log.d(TAG, "send content = " + new String(pkg.getBody()));
+
                 for (Map.Entry<String, Handler> entry : handlers.entrySet()) {
                     pkg = entry.getValue().handle(pkg);
                     //LOG.debug("encrypt [{}] handle package size = {}, header = {}, body = {}", new Object[]{entry.getKey(), pkg.getSize(), pkg.getHeaderLen(), pkg.getBodyLen()});
                 }
+
+                Log.d(TAG, "need write to os ... = ");
                 pkg.writePackageWithHeader(outputStream);
                 //LOG.debug("encryt write pkg ...");
+                Log.d(TAG, "write to os  finished ... = ");
 
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);

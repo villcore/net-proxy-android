@@ -269,6 +269,7 @@ public class LocalVpnService extends VpnService implements Runnable {
                 TCPHeader tcpHeader = m_TCPHeader;
                 tcpHeader.m_Offset = ipHeader.getHeaderLength();
 
+                Log.d(TAG, "get tcp data ...");
                 //本地IP, 127.0.0.1, localhost
                 if (ipHeader.getSourceIP() == LOCAL_IP) {
                     if (tcpHeader.getSourcePort() == m_TcpProxyServer.Port) {// 收到本地TCP服务器数据
@@ -312,6 +313,8 @@ public class LocalVpnService extends VpnService implements Runnable {
                             } else {
                                 Log.d(TAG, String.format("No host name found: %s", session.RemoteHost));
                             }
+                            String req = new String(tcpHeader.m_Data, dataOffset, tcpDataSize);
+                            System.out.println(">>>req = " + req);
                         }
 
                         // 转发给本地TCP服务器

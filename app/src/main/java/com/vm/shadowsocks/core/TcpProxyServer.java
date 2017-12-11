@@ -72,8 +72,8 @@ public class TcpProxyServer implements Runnable {
                 Socket localSocket = serverSocket.accept();
                 //LocalVpnService.Instance.protect(localSocket);
 
-//                System.out.println("accept connection ..." + localSocket.getRemoteSocketAddress().toString());
-//                InetSocketAddress destAddress = getDestAddress(localSocket);
+                Log.d(TAG,"accept connection ..." + localSocket.getRemoteSocketAddress().toString());
+                //                InetSocketAddress destAddress = getDestAddress(localSocket);
 //                Log.d(TAG, "dest addr = " + destAddress.toString());
 //                if (destAddress != null) {
 //
@@ -91,8 +91,8 @@ public class TcpProxyServer implements Runnable {
                     continue;
                 }
 
-                SocketUtil.configSocket(localSocket);
-                SocketUtil.configSocket(remoteSocket);
+//                SocketUtil.configSocket(localSocket);
+//                SocketUtil.configSocket(remoteSocket);
 
                 ClientConnection connection = new ClientConnection(this, localSocket, remoteSocket, "villcore");
                 connection.start();
