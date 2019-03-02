@@ -1,4 +1,4 @@
-package com.vm.shadowsocks.tunnel.villcore.bio.util;
+package com.vm.shadowsocks.tunnel.v1.bio.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

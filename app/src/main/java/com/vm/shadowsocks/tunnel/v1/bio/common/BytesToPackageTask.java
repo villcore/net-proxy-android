@@ -1,9 +1,9 @@
-package com.vm.shadowsocks.tunnel.villcore.bio.common;
+package com.vm.shadowsocks.tunnel.v1.bio.common;
 
 import android.util.Log;
 
-import com.vm.shadowsocks.tunnel.villcore.bio.handler.Handler;
-import com.vm.shadowsocks.tunnel.villcore.bio.pkg2.Package;
+import com.vm.shadowsocks.tunnel.v1.bio.handler.Handler;
+import com.vm.shadowsocks.tunnel.v1.bio.pkg2.Package;
 
 import java.io.InputStream;
 import java.io.OutputStream;

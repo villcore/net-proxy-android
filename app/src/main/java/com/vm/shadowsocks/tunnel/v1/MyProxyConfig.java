@@ -1,11 +1,7 @@
-package com.vm.shadowsocks.tunnel.villcore;
-
-import android.net.Uri;
-import android.util.Base64;
+package com.vm.shadowsocks.tunnel.v1;
 
 import com.vm.shadowsocks.core.TcpProxyServer;
 import com.vm.shadowsocks.tunnel.Config;
-import com.vm.shadowsocks.tunnel.shadowsocks.CryptFactory;
 
 import java.net.InetSocketAddress;
 

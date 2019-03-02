@@ -1,4 +1,4 @@
-package com.vm.shadowsocks.tunnel.villcore;
+package com.vm.shadowsocks.tunnel.v1;
 
 import com.vm.shadowsocks.tunnel.Config;
 

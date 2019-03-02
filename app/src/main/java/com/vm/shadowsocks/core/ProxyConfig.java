@@ -7,7 +7,7 @@ import com.vm.shadowsocks.tcpip.CommonMethods;
 import com.vm.shadowsocks.tunnel.Config;
 import com.vm.shadowsocks.tunnel.httpconnect.HttpConnectConfig;
 import com.vm.shadowsocks.tunnel.shadowsocks.ShadowsocksConfig;
-import com.vm.shadowsocks.tunnel.villcore.MyProxyConfig;
+import com.vm.shadowsocks.tunnel.v1.MyProxyConfig;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

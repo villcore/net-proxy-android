@@ -1,22 +1,15 @@
-package com.vm.shadowsocks.tunnel.villcore;
+package com.vm.shadowsocks.tunnel.v1;
 
 import android.util.Log;
 
 import com.vm.shadowsocks.tunnel.Config;
 import com.vm.shadowsocks.tunnel.Tunnel;
-import com.vm.shadowsocks.tunnel.shadowsocks.CryptFactory;
-import com.vm.shadowsocks.tunnel.shadowsocks.ICrypt;
-import com.vm.shadowsocks.tunnel.shadowsocks.ShadowsocksConfig;
-import com.vm.shadowsocks.tunnel.villcore.crypt.Crypt;
-import com.vm.shadowsocks.tunnel.villcore.pkg.Package;
+import com.vm.shadowsocks.tunnel.v1.crypt.Crypt;
+import com.vm.shadowsocks.tunnel.v1.pkg.Package;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.Selector;
-
-import static com.vm.shadowsocks.tunnel.shadowsocks.AesCrypt.CIPHER_AES_128_CFB;
 
 /**
  * Created by villcore on 2017/12/9.
@@ -24,6 +17,7 @@ import static com.vm.shadowsocks.tunnel.shadowsocks.AesCrypt.CIPHER_AES_128_CFB;
 
 public class NetProxyTunnel extends Tunnel {
     private static final String TAG = NetProxyTunnel.class.getSimpleName();
+
     private Crypt crypt;
     private Config m_Config;
     private boolean m_TunnelEstablished;

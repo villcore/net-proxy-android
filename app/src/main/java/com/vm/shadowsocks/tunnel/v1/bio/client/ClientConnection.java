@@ -1,19 +1,20 @@
-package com.vm.shadowsocks.tunnel.villcore.bio.client;
+package com.vm.shadowsocks.tunnel.v1.bio.client;
 
 import com.vm.shadowsocks.core.TcpProxyServer;
-import com.vm.shadowsocks.tunnel.villcore.bio.common.Connection;
-import com.vm.shadowsocks.tunnel.villcore.bio.common.PackageToBytesTask;
-import com.vm.shadowsocks.tunnel.villcore.bio.common.BytesToPackageTask;
-import com.vm.shadowsocks.tunnel.villcore.bio.handler.DecryptHandler;
-import com.vm.shadowsocks.tunnel.villcore.bio.handler.EncryptHandler;
-import com.vm.shadowsocks.tunnel.villcore.bio.handler.Handler;
-import com.vm.shadowsocks.tunnel.villcore.crypt.Crypt;
+import com.vm.shadowsocks.tunnel.v1.bio.common.BytesToPackageTask;
+import com.vm.shadowsocks.tunnel.v1.bio.common.Connection;
+import com.vm.shadowsocks.tunnel.v1.bio.common.PackageToBytesTask;
+import com.vm.shadowsocks.tunnel.v1.bio.handler.DecryptHandler;
+import com.vm.shadowsocks.tunnel.v1.bio.handler.EncryptHandler;
+import com.vm.shadowsocks.tunnel.v1.bio.handler.Handler;
+import com.vm.shadowsocks.tunnel.v1.crypt.Crypt;
 
-import javax.crypto.NoSuchPaddingException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by villcore on 2017/7/17.

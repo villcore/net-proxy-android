@@ -1,4 +1,4 @@
-package com.vm.shadowsocks.tunnel.villcore.bio.util;
+package com.vm.shadowsocks.tunnel.v1.bio.util;
 
 /**
  * Created by villcore on 2017/7/17.

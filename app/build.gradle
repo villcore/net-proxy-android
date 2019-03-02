@@ -12,13 +12,12 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.3.1'
     }
 }
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
@@ -27,6 +26,7 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.2"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -43,9 +43,11 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    compile 'io.netty:netty-all:4.1.15.Final'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
-    compile 'com.google.zxing:core:3.0.1'
+    compile 'com.google.zxing:core:3.3.0'
     compile 'org.bouncycastle:bcprov-jdk15on:1.57'
     compile 'com.futuremind.recyclerfastscroll:fastscroll:0.2.5'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.android.support:multidex:1.0.3'
 }

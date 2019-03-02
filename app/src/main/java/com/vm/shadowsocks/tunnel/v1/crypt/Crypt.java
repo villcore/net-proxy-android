@@ -1,25 +1,20 @@
-package com.vm.shadowsocks.tunnel.villcore.crypt;
+package com.vm.shadowsocks.tunnel.v1.crypt;
 
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.StreamBlockCipher;
 import org.bouncycastle.crypto.StreamCipher;
 import org.bouncycastle.crypto.engines.AESFastEngine;
 import org.bouncycastle.crypto.modes.CFBBlockCipher;
-import org.bouncycastle.crypto.modes.OFBBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
-import org.bouncycastle.jce.exception.ExtIOException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 /**
  * Created by villcore on 2017/12/10.

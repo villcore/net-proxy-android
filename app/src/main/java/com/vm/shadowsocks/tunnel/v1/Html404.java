@@ -1,4 +1,4 @@
-package com.vm.shadowsocks.tunnel.villcore;
+package com.vm.shadowsocks.tunnel.v1;
 
 public class Html404 {
     public static String RESP = "HTTP/1.1 404 Not Found\r\n" +

@@ -3,11 +3,7 @@ package com.vm.shadowsocks.core;
 import com.vm.shadowsocks.tunnel.Config;
 import com.vm.shadowsocks.tunnel.RawTunnel;
 import com.vm.shadowsocks.tunnel.Tunnel;
-import com.vm.shadowsocks.tunnel.httpconnect.HttpConnectConfig;
-import com.vm.shadowsocks.tunnel.httpconnect.HttpConnectTunnel;
-import com.vm.shadowsocks.tunnel.shadowsocks.ShadowsocksConfig;
-import com.vm.shadowsocks.tunnel.shadowsocks.ShadowsocksTunnel;
-import com.vm.shadowsocks.tunnel.villcore.NetProxyTunnel;
+import com.vm.shadowsocks.tunnel.v1.NetProxyTunnel;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.Selector;

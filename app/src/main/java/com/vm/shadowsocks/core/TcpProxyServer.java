@@ -3,22 +3,16 @@ package com.vm.shadowsocks.core;
 import android.util.Log;
 
 import com.vm.shadowsocks.tcpip.CommonMethods;
-import com.vm.shadowsocks.tunnel.Config;
 import com.vm.shadowsocks.tunnel.Tunnel;
-import com.vm.shadowsocks.tunnel.villcore.bio.client.ClientConnection;
-import com.vm.shadowsocks.tunnel.villcore.bio.common.Connection;
-import com.vm.shadowsocks.tunnel.villcore.bio.util.SocketUtil;
+import com.vm.shadowsocks.tunnel.v1.bio.client.ClientConnection;
+import com.vm.shadowsocks.tunnel.v1.bio.common.Connection;
+import com.vm.shadowsocks.tunnel.v1.bio.util.SocketUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,10 +22,10 @@ import java.util.List;
 public class TcpProxyServer implements Runnable {
     private static final String TAG = TcpProxyServer.class.getSimpleName();
 
-    //是否停止
+    // 是否停止
     public volatile boolean stopped;
 
-    //端口
+    // 端口
     public short Port;
 
     Thread m_ServerThread;

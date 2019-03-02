@@ -1,6 +1,6 @@
-package com.vm.shadowsocks.tunnel.villcore.bio.pkg2;
+package com.vm.shadowsocks.tunnel.v1.bio.pkg2;
 
-import com.vm.shadowsocks.tunnel.villcore.bio.util.ByteArrayUtils;
+import com.vm.shadowsocks.tunnel.v1.bio.util.ByteArrayUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package com.vm.shadowsocks.tunnel.villcore.pkg;
+package com.vm.shadowsocks.tunnel.v1.pkg;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

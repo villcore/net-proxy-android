@@ -1,4 +1,4 @@
-package com.vm.shadowsocks.tunnel.villcore.bio.pkg2;
+package com.vm.shadowsocks.tunnel.v1.bio.pkg2;
 
 public class PkgConf {
 

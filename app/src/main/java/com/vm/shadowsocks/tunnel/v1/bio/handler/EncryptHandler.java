@@ -1,7 +1,7 @@
-package com.vm.shadowsocks.tunnel.villcore.bio.handler;
+package com.vm.shadowsocks.tunnel.v1.bio.handler;
 
-import com.vm.shadowsocks.tunnel.villcore.bio.pkg2.Package;
-import com.vm.shadowsocks.tunnel.villcore.crypt.Crypt;
+import com.vm.shadowsocks.tunnel.v1.bio.pkg2.Package;
+import com.vm.shadowsocks.tunnel.v1.crypt.Crypt;
 
 import java.nio.ByteBuffer;
 

@@ -2,8 +2,6 @@ package com.vm.shadowsocks.tunnel;
 
 import android.util.Log;
 
-import com.vm.shadowsocks.tunnel.villcore.NetProxyTunnel;
-
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.Selector;
